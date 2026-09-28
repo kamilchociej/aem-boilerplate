@@ -109,6 +109,50 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
+ * Reads an authored key/value block (two columns per row) into an object.
+ * @param {Element} block The block element
+ * @returns {Object} The parsed config
+ */
+function parseSearchConfig(block) {
+  const config = {};
+
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    const [keyEl, valueEl] = row.querySelectorAll(':scope > div');
+    const key = keyEl?.textContent?.trim();
+    const value = valueEl?.textContent?.trim();
+
+    if (key && value) config[key] = value;
+  });
+
+  return config;
+}
+
+/**
+ * Replaces the :search: icon in the nav tools with a mount point and loads
+ * scripts/lazy.js, which creates the StreamX search input from the Search Config.
+ * @param {Element} nav The nav element
+ */
+function decorateSearch(nav) {
+  const configBlock = nav.querySelector('.search-config');
+  if (!configBlock) return;
+
+  const config = parseSearchConfig(configBlock);
+
+  // The config table is not content, so it is removed from the nav.
+  (configBlock.closest('.search-config-wrapper') || configBlock).remove();
+
+  const searchIcon = nav.querySelector('.nav-tools .icon-search');
+  if (!searchIcon) return;
+
+  const mount = document.createElement('div');
+  mount.className = 'nav-search';
+  (searchIcon.closest('p') || searchIcon).replaceWith(mount);
+
+  import('../../scripts/lazy.js')
+    .then(({ default: loadNavSearch }) => loadNavSearch(mount, config));
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -163,6 +207,8 @@ export default async function decorate(block) {
   // prevent mobile nav behavior on window resize
   toggleMenu(nav, navSections, isDesktop.matches);
   isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+
+  decorateSearch(nav);
 
   const navWrapper = document.createElement('div');
   navWrapper.className = 'nav-wrapper';

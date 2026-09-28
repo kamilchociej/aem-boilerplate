@@ -1,0 +1,28 @@
+.search-results-panel .search-result-title {
+  color: var(--link-color);
+  font-size: var(--body-font-size-m);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.search-results-panel .search-result-meta {
+  display: flex;
+  gap: 16px;
+  color: var(--dark-color);
+  font-size: var(--body-font-size-xs);
+}
+
+.search-suggestion {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.search-suggestion-content {
+  font-size: var(--body-font-size-xs);
+}
+
+.search-suggestion-content em {
+  font-style: normal;
+  font-weight: 700;
+}

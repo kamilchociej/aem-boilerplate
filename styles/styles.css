@@ -11,6 +11,9 @@
  */
 
 :root {
+  /* stacking of the StreamX search input */
+  --stx-z-query-input: 1;
+
   /* colors */
   --background-color: white;
   --light-color: #f8f8f8;
